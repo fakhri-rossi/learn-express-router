@@ -2,14 +2,23 @@ const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser');
 const cookieSignature = require('cookie-signature');
+const session = require('express-session');
 
 // define port
 const port = 3000;
+const secret = 'secret-key';
 
 // define middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser('secret-key'));
+app.use(cookieParser(secret));
+app.use(session({
+    secret: secret,
+    resave: false,
+    saveUninitialized: true,
+    // cookie: { secure: true }
+}));
+
 
 
 
@@ -28,7 +37,16 @@ app.get('/verifycookie', (req, res) => {
     // const cookie = req.cookies;
     const cookie = req.signedCookies;
     res.send(cookie);
-})
+});
+
+app.get('/count', (req, res) => {
+    if(req.session.viewCount){
+        req.session.viewCount++;
+    } else {
+        req.session.viewCount = 1;
+    }
+    res.send(`View count: ${req.session.viewCount}`);
+});
 
 app.use('/theater', require('./routes/theater'));
 app.use('/movies', require('./routes/movies'));
