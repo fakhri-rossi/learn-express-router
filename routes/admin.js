@@ -10,6 +10,8 @@ router.use((req, res, next) => {
 });
 
 router.get('/', (req, res) => {
+    res.cookie('token', '1234567890123');
+    res.cookie('user', 'admin');
     res.send('Index Admin');
 });
 
