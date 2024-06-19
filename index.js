@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser');
+const cookieSignature = require('cookie-signature');
 
 // define port
 const port = 3000;
@@ -15,6 +16,11 @@ app.use(cookieParser('secret-key'));
 // Define routes
 app.get('/signingcookie', (req, res) => {
     res.cookie('paket', 'kaos', { signed: true });
+    
+    const secretCode = cookieSignature.sign('Rossi Stark', 'genius-key');
+    console.log(cookieSignature.unsign(secretCode, 'genius-key'));
+
+    res.cookie('secret code', secretCode, { signed: true });
     res.send('Signed cookie');
 });
 
