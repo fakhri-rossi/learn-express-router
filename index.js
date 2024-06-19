@@ -48,6 +48,17 @@ app.get('/count', (req, res) => {
     res.send(`View count: ${req.session.viewCount}`);
 });
 
+app.get('/register', (req, res) => {
+    const { username = 'anonim' } = req.query;
+    req.session.username = username;
+    // res.send(`You registered as ${username}`);
+    res.redirect('/dashboard');
+});
+
+app.get('/dashboard', (req, res) => {
+    res.send(`Welcome back ${req.session.username}!`);
+});
+
 app.use('/theater', require('./routes/theater'));
 app.use('/movies', require('./routes/movies'));
 app.use('/admin', require('./routes/admin'));
